@@ -32,7 +32,8 @@ interface EventContext extends NextPageContext {
 }
 
 Event.getInitialProps = async (ctx: EventContext) => {
-    const eventResponse = await axios.get(`http://localhost:3000/api/event?id=${ctx?.query?.id}`)
+    console.log(ctx)
+    const eventResponse = await axios.get(`/api/event?id=${ctx?.query?.id}`)
     const event: Event = eventResponse?.data
     return { event }
 }
