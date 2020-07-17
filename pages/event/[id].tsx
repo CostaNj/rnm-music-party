@@ -1,6 +1,9 @@
 import { NextPage, NextPageContext } from 'next'
+import getConfig from 'next/config'
 import axios from 'axios'
 import Link from 'next/link'
+
+const { publicRuntimeConfig } = getConfig()
 
 interface Event {
     name: string
@@ -32,13 +35,7 @@ interface EventContext extends NextPageContext {
 }
 
 Event.getInitialProps = async (ctx: EventContext) => {
-    console.log(ctx)
-    //const eventResponse = await axios.get(`http://localhost:3000/api/event?id=${ctx?.query?.id}`)
-    const eventResponse = {
-        data: {
-            name: ctx.query.id
-        }
-    }
+    const eventResponse = await axios.get(`${publicRuntimeConfig.base_url}/api/event?id=${ctx?.query?.id}`)
     const event: Event = eventResponse?.data
     return {
         event
