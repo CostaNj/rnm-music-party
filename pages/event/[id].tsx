@@ -2,11 +2,11 @@ import { NextPage, NextPageContext } from 'next'
 import axios from 'axios'
 import Link from 'next/link'
 
-export interface Event {
+interface Event {
     name: string
 }
 
-export interface EventProps {
+interface EventProps {
     event: Event | undefined
 }
 
@@ -25,7 +25,13 @@ const Event: NextPage<EventProps> = ({ event }) => {
     )
 }
 
-Event.getInitialProps = async (ctx: NextPageContext) => {
+interface EventContext extends NextPageContext {
+    query: {
+        id: string
+    }
+}
+
+Event.getInitialProps = async (ctx: EventContext) => {
     const eventResponse = await axios.get(`http://localhost:3000/api/event?id=${ctx?.query?.id}`)
     const event: Event = eventResponse?.data
     return { event }
