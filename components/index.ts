@@ -1,0 +1,1 @@
+export { EventHead } from './event-head'
