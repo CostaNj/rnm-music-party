@@ -5,24 +5,18 @@ import { EventApiRequest, PgEventResponse, Event } from '../../../interfaces/eve
 import { AxiosResponse } from '../../../interfaces/api'
 
 export default async (req: EventApiRequest, res: NextApiResponse) => {
-    pg_client.query(`SELECT * FROM public.events;`, (err: any, pgResponse: PgEventResponse) => {
 
-        let axiosResponse: AxiosResponse = {
-            data: {
-                response: null
-            }
+    let axiosResponse: AxiosResponse = {
+        data: {
+            response: null
         }
+    }
 
-        if (err) {
-            axiosResponse.data.error = {
-                type: 'technical error',
-                text: 'db error'
-            }
-        }
+    try {
+        const pgEventsResponse: PgEventResponse = await pg_client.query(`SELECT * FROM public.events`)
+        const events: Event[] = pgEventsResponse?.rows
 
-        const events: Event[] = pgResponse.rows
-
-        if (events.length > 0) {
+        if (events?.length > 0) {
             axiosResponse.data.response = events
         } else {
             axiosResponse.data.error = {
@@ -31,7 +25,13 @@ export default async (req: EventApiRequest, res: NextApiResponse) => {
             }
         }
 
-        res.statusCode = 200
-        res.json(axiosResponse.data)
-    });
+    } catch (err) {
+        console.error(err)
+        axiosResponse.data.error = {
+            type: 'technical error',
+            text: 'db error'
+        }
+    }
+
+    res.status(200).json(axiosResponse.data)
 }
