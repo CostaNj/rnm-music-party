@@ -1,4 +1,4 @@
-import { NextApiResponse } from 'next''
+import { NextApiResponse } from 'next'
 import cyrillicToTranslit from 'cyrillic-to-translit-js'
 import { pg_client } from '../../../db'
 
